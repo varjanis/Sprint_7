@@ -27,7 +27,7 @@ class TestCreateOrder:
                           data.choose_random_deliverydate(), data.generate_random_comment(), '']
                   ]
                      )
-    def test_create_new_order_all_fields_filled_one_color_success(self, first_name, last_name, address, metro_station, phone, rent_time, delivery_date, comment, color):
+    def test_create_new_order_all_fields_filled_first_color_second_color_two_colors_success(self, first_name, last_name, address, metro_station, phone, rent_time, delivery_date, comment, color):
 
         payload = {
             "firstName": first_name,

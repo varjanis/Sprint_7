@@ -23,6 +23,9 @@ class TestCreateCourier:
         assert response.status_code == 201
         assert response.text == data.create_courier_response_text_200
 
+        id = data.login_and_return_id(login, password)
+        data.delete_courier(id)
+
     @allure.title('Проверка того, что нельзя создать двух одинаковых курьеров')
     def test_create_two_identical_couriers_fail(self):
 
@@ -39,8 +42,9 @@ class TestCreateCourier:
         assert response.status_code == 409
         assert response.text == data.create_courier_response_text_409
 
-    @allure.title('Проверка того, что нельзя зарегистировать курьера, если не все поля заполнены')
-    def test_not_all_fields_filled_fail(self):
+
+    @allure.title('Проверка того, что нельзя зарегистировать курьера, если не все поля заполнены: не заполнено поле логин')
+    def test_not_all_fields_filled_no_login_fail(self):
 
         password = data.generate_random_string(10)
         first_name = data.generate_random_string(10)
@@ -48,6 +52,37 @@ class TestCreateCourier:
         payload = {
             "password": password,
             "firstName": first_name
+        }
+
+        response = requests.post(data.create_courier_endpoint, data=payload)
+
+        assert response.status_code == 400
+        assert response.text == data.create_courier_response_text_400
+
+    @allure.title('Проверка того, что нельзя зарегистировать курьера, если не все поля заполнены: не заполнено поле пароль')
+    def test_not_all_fields_filled_no_password_fail(self):
+        login = data.generate_random_string(10)
+        first_name = data.generate_random_string(10)
+
+        payload = {
+            "login": login,
+            "firstName": first_name
+        }
+
+        response = requests.post(data.create_courier_endpoint, data=payload)
+
+        assert response.status_code == 400
+        assert response.text == data.create_courier_response_text_400
+
+    @allure.title(
+        'Проверка того, что нельзя зарегистировать курьера, если не все поля заполнены: не заполнено поле Имя')
+    def test_not_all_fields_filled_no_password_fail(self):
+        login = data.generate_random_string(10)
+        password = data.generate_random_string(10)
+
+        payload = {
+            "login": login,
+            "password": password
         }
 
         response = requests.post(data.create_courier_endpoint, data=payload)

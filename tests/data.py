@@ -3,9 +3,12 @@ import string
 import requests
 import json
 
-order_endpoint = 'https://qa-scooter.praktikum-services.ru/api/v1/orders/'
-courier_login_endpoint = 'https://qa-scooter.praktikum-services.ru/api/v1/courier/login'
-create_courier_endpoint = 'https://qa-scooter.praktikum-services.ru/api/v1/courier/'
+BASE_URL = 'https://qa-scooter.praktikum-services.ru/'
+
+order_endpoint = BASE_URL + 'api/v1/orders/'
+courier_login_endpoint = BASE_URL + 'api/v1/courier/login'
+create_courier_endpoint = BASE_URL + 'api/v1/courier/'
+delete_courier_endpoint = BASE_URL + 'api/v1/courier/'
 
 create_courier_response_text_200 = '{"ok":true}'
 create_courier_response_text_409 = '{"code":409,"message":"Этот логин уже используется. Попробуйте другой."}'
@@ -13,6 +16,8 @@ create_courier_response_text_400 = '{"code":400,"message":"Недостаточ�
 
 login_courier_response_text_400 = '{"code":400,"message":"Недостаточно данных для входа"}'
 login_courier_response_text_404 = '{"code":404,"message":"Учетная запись не найдена"}'
+
+
 
 
 def register_new_courier_and_return_login_password():
@@ -123,3 +128,25 @@ def create_new_order():
     response = requests.post(order_endpoint, data=json_payload)
 
     return response
+
+
+def delete_courier(id):
+
+    response = requests.delete(delete_courier_endpoint+str(id))
+
+    if response.status_code == 200:
+        print('После окончания тестирования курьер удалён')
+    else:
+        print('Не получилось удалить курьера')
+
+
+def login_and_return_id(login, password):
+
+    response = requests.post(courier_login_endpoint, data={'login': login, 'password': password})
+
+    if response.status_code == 200:
+        return response.json()['id']
+    else:
+        print('Ошибка логина')
+
+

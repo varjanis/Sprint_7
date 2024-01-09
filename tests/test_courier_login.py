@@ -16,9 +16,12 @@ class TestCourierLogin:
         }
 
         response = requests.post(data.courier_login_endpoint, data=payload)
+        id = response.json()['id']
 
         assert response.status_code == 200
         assert "id" in response.text
+
+        data.delete_courier(id)
 
     @allure.title('Проверка, что курьер не может войти в систему, если не заполнено поле логин')
     def test_courier_login_loginfield_not_filled_fail(self):
